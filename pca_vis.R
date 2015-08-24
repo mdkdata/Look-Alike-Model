@@ -1,6 +1,6 @@
 setwd('/Users/ivanliu/Google Drive/Clients/Coles/FCO Model')
-fco_dt <- read.csv('FCO.csv')
-llo_dt <- read.csv('LLO.csv')
+fco_dt <- read.csv('../FCO Model/FCO.csv')
+llo_dt <- read.csv('../FCO Model/LLO.csv')
 head(fco_dt);
 dim(fco_dt);dim(llo_dt)
 
