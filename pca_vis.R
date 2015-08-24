@@ -4,7 +4,9 @@ llo_dt <- read.csv('../FCO Model/LLO.csv')
 head(fco_dt);
 dim(fco_dt);dim(llo_dt)
 
+#########################
 ### Feature Selection ###
+#########################
 # round(cor(fco_dt[,1:4]), 2)
 cols <-
     colnames(fco_dt)[c(
@@ -24,8 +26,9 @@ llo[,c('LOYALTY_RANK_NUMBER')] <-
 llo[,c('MBR_RES_PCODE')] <- as.factor(llo[,c('MBR_RES_PCODE')])
 llo$target <- 0
 
-
+######################
 ### Dummy Variable ###
+######################
 library(caret)
 all_df <- rbind(fco,llo)
 dummies <- dummyVars(target ~ ., data = all_df)
@@ -40,40 +43,54 @@ all_dum <- predict(dummies, newdata = all_df)
 
 all_dum[which(is.na(all_dum))] <- 0
 
+########################
+### NearZeroVariable ###
+########################
+nzv <- nearZeroVar(all_dum, saveMetrics= TRUE)
+nzv[nzv$nzv,][1:100,]
+nzv <- nearZeroVar(all_dum)
+all_dum_nzv <- all_dum[, -nzv]
+
+###########
 ### PCA ###
+###########
 pc <-
     princomp(
-        all_dum[,2:(ncol(all_dum) - 1)], cor = F, scores = TRUE, center = TRUE,
+        all_dum_nzv[,2:(ncol(all_dum_nzv) - 1)], cor = TRUE, scores = TRUE, center = TRUE,
         scale. = TRUE
     )
 summary(pc)
 plot(pc,type = "lines")
 # biplot(pc)
 
+### Caret PCA ###
+# trans <- preProcess(all_dum_nzv[,2:(ncol(all_dum_nzv) - 1)], 
+#                     method=c("BoxCox", "center", 
+#                              "scale", "pca"))
+# PC <- predict(trans, all_dum_nzv[,2:(ncol(all_dum_nzv) - 1)])
+
+############
+### PLOT ###
+############
 # 3-D PCA plot
 library(rgl)
 plot3d(pc$scores[,1:3], col = all_df$target + 1)
 
 # 2-D PCA plot
-library(ggbiplot)
-g <- ggbiplot(
-    pc[,1:2], obs.scale = 1, var.scale = 1,
-    groups = all_df$target, ellipse = TRUE,
-    circle = TRUE
-)
-g <- g + scale_color_discrete(name = '')
-g <- g + theme(legend.direction = 'horizontal',
-               legend.position = 'top')
-print(g)
-
-
-### Caret PCA
-trans = preProcess(all_dum[,2:(ncol(all_dum) - 1)], 
-                   method=c("BoxCox", "center", 
-                            "scale", "pca"))
-PC = predict(trans, all_dum[,2:(ncol(all_dum) - 1)])
-
-xyplot(nC ~ X4v,
-       data = PC[,1:2],
-       groups = mdrrClass,
-       auto.key = list(columns = 2))
+# library(ggbiplot)
+# g <- ggbiplot(
+#     pc[,1:2], obs.scale = 1, var.scale = 1,
+#     groups = all_df$target, ellipse = TRUE,
+#     circle = TRUE
+# )
+# g <- g + scale_color_discrete(name = '')
+# g <- g + theme(legend.direction = 'horizontal',
+#                legend.position = 'top')
+# print(g)
+#
+plot(pc$scores[which(all_df$target == 1),1:2], col= 'blue', main='PCA of Different Member Groups')
+points(pc$scores[which(all_df$target == 0),1:2], col = 'red')
+# xyplot(Comp.1 ~ Comp.2,
+#        data = cbind(pc$scores[,1:2],all_df$target),
+#        groups = target,
+#        auto.key = list(columns = 2))
