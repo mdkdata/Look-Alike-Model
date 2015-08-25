@@ -16,12 +16,13 @@ num_rows_sample <- 15000
 train        <- read_csv("../input/train.csv")
 train_sample <- train[sample(1:nrow(train), size = num_rows_sample),]
 features     <- train_sample[,c(-1, -95)]
+features <- all_dum[,-c(1,151)]
 
 tsne <- Rtsne(as.matrix(features), check_duplicates = FALSE, pca = TRUE, 
               perplexity=30, theta=0.5, dims=2)
 
 embedding <- as.data.frame(tsne$Y)
-embedding$Class <- as.factor(sub("Class_", "", train_sample[,95]))
+embedding$Class <- as.factor(sub("Class_", "", all_dum[,151]))
 
 p <- ggplot(embedding, aes(x=V1, y=V2, color=Class)) +
     geom_point(size=1.25) +
