@@ -108,9 +108,9 @@ plot3d(pc$scores[,1:3], col=all_dum$cluster, main="k-means clusters")
 plot(pc$scores[which(all_df$target == 1),1:2], col= 'blue', main='PCA of Different Member Groups')
 points(pc$scores[which(all_df$target == 0),1:2], col = 'red')
 
-plot(pc$scores[which(all_df$cluster == 1),1:2], col= 'blue', main='PCA of Different Member Groups')
-points(pc$scores[which(all_df$cluster == 2),1:2], col = 'red')
-points(pc$scores[which(all_df$cluster == 3),1:2], col = 'green')
+plot(pc$scores[which(all_dum$cluster == 1),1:2], col= 'blue', main='PCA of Different Member Groups')
+points(pc$scores[which(all_dum$cluster == 2),1:2], col = 'red')
+points(pc$scores[which(all_dum$cluster == 3),1:2], col = 'green')
 
 # xyplot(Comp.1 ~ Comp.2,
 #        data = cbind(pc$scores[,1:2],all_df$target),
