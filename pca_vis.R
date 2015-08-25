@@ -77,12 +77,21 @@ plot(pc,type = "lines")
 #                              "scale", "pca"))
 # PC <- predict(trans, all_dum_nzv[,2:(ncol(all_dum_nzv) - 1)])
 
+###############
+### K-means ###
+###############
+set.seed(42)
+cl <- kmeans(all_dum[,2:(ncol(all_dum) - 1)],3)
+all_dum <- as.data.frame(all_dum)
+all_dum$cluster <- as.factor(cl$cluster)
+
 ############
 ### PLOT ###
 ############
 # 3-D PCA plot
 library(rgl)
-plot3d(pc$scores[,1:3], col = all_df$target + 1)
+plot3d(pc$scores[,1:3], col = all_df$target + 1, main="FirstChoice vs. Others")
+plot3d(pc$scores[,1:3], col=all_dum$cluster, main="k-means clusters")
 
 # 2-D PCA plot
 # library(ggbiplot)
@@ -98,6 +107,11 @@ plot3d(pc$scores[,1:3], col = all_df$target + 1)
 #
 plot(pc$scores[which(all_df$target == 1),1:2], col= 'blue', main='PCA of Different Member Groups')
 points(pc$scores[which(all_df$target == 0),1:2], col = 'red')
+
+plot(pc$scores[which(all_df$cluster == 1),1:2], col= 'blue', main='PCA of Different Member Groups')
+points(pc$scores[which(all_df$cluster == 2),1:2], col = 'red')
+points(pc$scores[which(all_df$cluster == 3),1:2], col = 'green')
+
 # xyplot(Comp.1 ~ Comp.2,
 #        data = cbind(pc$scores[,1:2],all_df$target),
 #        groups = target,
