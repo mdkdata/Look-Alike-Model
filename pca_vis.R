@@ -12,9 +12,10 @@ dim(fco_dt);dim(llo_dt)
 #     colnames(fco_dt)[c(
 #         1,3,5,6,7,8,21:28,30:90,124:139,140,143,146:150,152,154:155,160:163,167:175,177:204,206:207
 #     )]
+# table(fco_dt[,187])
 cols <-
     colnames(fco_dt)[c(
-        1,2,5,6,8,21:28,124:139,140:141,152,154:155,160:163,172:175,177:204,206:207
+        1,2,5,6,8,21:28,124:139,140:141,152,154:155,160:163,172:173,176,187:189, 196:204,206:207 #177:186, 190:195
     )]
 
 fco <- fco_dt[,cols]
@@ -39,6 +40,7 @@ dim(all_df)
 dummies <- dummyVars(target ~ ., data = all_df)
 all_dum <- predict(dummies, newdata = all_df)
 
+head(all_dum[,c(3,4,7,16,17)])
 all_dum <- all_dum[,-c(3,4,7,16,17)]
 # for (i in 1:ncol(fco)) {
 #     if (is.factor(fco[,i])) {
