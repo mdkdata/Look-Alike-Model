@@ -93,6 +93,8 @@ library(rgl)
 plot3d(pc$scores[,1:3], col = all_df$target + 1, main="FirstChoice vs. Others")
 plot3d(pc$scores[,1:3], col=all_dum$cluster, main="k-means clusters")
 
+plot3d(embedding[,1:3], col = all_df$target + 1, main="FirstChoice vs. Others")
+
 # 2-D PCA plot
 # library(ggbiplot)
 # g <- ggbiplot(
