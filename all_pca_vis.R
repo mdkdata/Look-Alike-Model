@@ -105,8 +105,8 @@ library(Rtsne)
 set.seed(1)
 features <- all_dum
 
-tsne <- Rtsne(as.matrix(features), check_duplicates = FALSE, pca = TRUE, 
-              perplexity=30, theta=0.5, dims=2)
+tsne <- Rtsne(as.matrix(features), check_duplicates = TRUE, pca = TRUE, initial_dims=50,
+                  perplexity=30, theta=0.5, dims=2)
 
 embedding <- as.data.frame(tsne$Y)
 embedding$Class <- as.factor(all_dt$target)
