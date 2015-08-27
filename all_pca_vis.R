@@ -12,10 +12,10 @@ head(fco_dt)
 # fco_dt[which(fco_dt$MOSAIC_DESC=='n/a'),5] <- '-'
 fco <- fco_dt[,-c(1,6,7,9,13,17,19,25,27,29,35)]
 llo <- llo_dt[,-c(1,6,7,9,13,17,19,25,27,29,35)]
-coleso <- coleso_dt[,-c(1,6,7,9,13,17,19,25,27,29,35)]
+coleso <- coleso_dt[sample(1:nrow(coleso_dt),10000),-c(1,6,7,9,13,17,19,25,27,29,35)]
 eshop <- eshop_dt[,-c(1,6,7,9,13,17,19,25,27,29,35)]
-targeto <- targeto_dt[,-c(1,6,7,9,13,17,19,25,27,29,35)]
-webjet <- webjet_dt[,-c(1,6,7,9,13,17,19,25,27,29,35)]
+targeto <- targeto_dt[sample(1:nrow(targeto_dt),10000),-c(1,6,7,9,13,17,19,25,27,29,35)]
+webjet <- webjet_dt[sample(1:nrow(webjet_dt),10000),-c(1,6,7,9,13,17,19,25,27,29,35)]
 dim(fco);dim(llo);dim(coleso);dim(eshop);dim(targeto);dim(webjet)
 head(fco);str(fco);colnames(fco)
 for (i in 1:ncol(fco)){
@@ -89,7 +89,11 @@ all_dum <- predict(dummies, newdata = all_dt[,-ncol(all_dt)])
 
 all_dum[which(is.na(all_dum))] <- 0
 
-pc <- princomp(all_dum, cor = TRUE, scores = TRUE, center = TRUE, scale. = TRUE)
+### save data 
+save(all_dum,all_dt, file='../FCO Model/data.RData')
+load('../FCO Model/data.RData')
+
+pc <- princomp(all_dum, cor = F, scores = TRUE, center = TRUE, scale. = TRUE)
 summary(pc)
 plot(pc,type = "lines")
 

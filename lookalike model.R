@@ -5,17 +5,18 @@ set.seed(998)
 target <- all_dt$target
 # df <- cbind(as.data.frame(all_dum), target)
 df <- all_dt[,-ncol(all_dt)]
-df$target <- ifelse(df$target %in% c('fco'), 1, 0)
+df$target <- ifelse(df$target %in% c('fco'), 'Y', 'N')
+df$target <- as.factor(df$target)
 inTraining <- createDataPartition(df$target, p = .75, list = FALSE)
 training <- df[ inTraining,]
 testing  <- df[-inTraining,]
 
 # Config
 fitControl <- trainControl(## 10-fold CV
-    method = "none",
+    method = "repeatedcv",
     number = 10,
     ## repeated ten times
-    repeats = 10)
+    repeats = 5)
 
 # Training
 set.seed(825)
@@ -59,14 +60,14 @@ gbmFit2 <- train(target ~ ., data = training,
 
 # Model 
 fitControl <- trainControl(method = "none", number = 10, repeats = 5, classProbs = T, verbose = T)
-gbmGrid <-  expand.grid(nrounds=500,max_depth=6,eta=0.05)
-fit <- train(target ~ ., data = training, method ="xgbTree", metric ='Kappa', 
-             trControl = fitControl, do.trace=100, tuneGrid = gbmGrid)
+Grid <-  expand.grid(mtry=17)
+fit <- train(target ~ ., data = training, method ="rf", metric ='ROC', 
+             trControl = fitControl, do.trace=100, tuneGrid = Grid)
 #preProc = c("center","scale"),tuneLength = 10, repeats = 15
 
 
 # Class Distince Calculation
-centroids <- classDist(trainBC, trainMDRR)
+centroids <- classDist(all_dum, all_dt$col)
 distances <- predict(centroids, testBC)
 distances <- as.data.frame(distances)
 head(distances)
