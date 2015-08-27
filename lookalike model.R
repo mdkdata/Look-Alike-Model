@@ -1,8 +1,14 @@
+library(caret)
+options("na.action")
 # Spliting
 set.seed(998)
-inTraining <- createDataPartition(all_dum$target, p = .75, list = FALSE)
-training <- all_dum[ inTraining,]
-testing  <- all_dum[-inTraining,]
+target <- all_dt$target
+# df <- cbind(as.data.frame(all_dum), target)
+df <- all_dt[,-ncol(all_dt)]
+df$target <- ifelse(df$target %in% c('fco'), 1, 0)
+inTraining <- createDataPartition(df$target, p = .75, list = FALSE)
+training <- df[ inTraining,]
+testing  <- df[-inTraining,]
 
 # Config
 fitControl <- trainControl(## 10-fold CV
@@ -13,7 +19,7 @@ fitControl <- trainControl(## 10-fold CV
 
 # Training
 set.seed(825)
-gbmFit1 <- train(Target ~ ., data = training,
+gbmFit1 <- train(target ~ ., data = training,
                  method = "gbm",
                  trControl = fitControl,
                  ## This last option is actually one

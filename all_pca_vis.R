@@ -124,7 +124,7 @@ p
 
 ### 3d plot
 library(rgl)
-plot3d(pc$scores[,1:3], col = all_dt$target, main="FirstChoice vs. Others")
+plot3d(pc$scores[,1:3], col = all_dt$col, main="FirstChoice vs. Others")
 plot3d(pc$scores[,1:3], col=all_dum$cluster, main="k-means clusters")
 
 plot3d(embedding[,1:3], col = all_df$target + 1, main="FirstChoice vs. Others")
