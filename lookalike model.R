@@ -12,7 +12,7 @@ testing  <- df[-inTraining,]
 
 # Config
 fitControl <- trainControl(## 10-fold CV
-    method = "repeatedcv",
+    method = "none",
     number = 10,
     ## repeated ten times
     repeats = 10)
@@ -38,7 +38,7 @@ gbmImp <- varImp(gbmFit1, scale = FALSE)
 # Adaptive Resampling
 fitControl2 <- trainControl(method = "adaptive_cv",
                             number = 10,
-                            repeats = 5,
+                            repeats = 2,
                             ## Estimate class probabilities
                             classProbs = TRUE,
                             ## Evaluate performance using 
@@ -50,12 +50,11 @@ fitControl2 <- trainControl(method = "adaptive_cv",
                                             method = "gls",
                                             complete = TRUE))
 set.seed(825)
-gbmFit2 <- train(x = training_x,
-                 y = training_y,
+gbmFit2 <- train(target ~ ., data = training,
                  method = "gbm",
                  trControl = fitControl2,
                  preProc = c("center", "scale", "pca"),
-                 tuneLength = 8,
+                 tuneLength = 8,verbose = T,
                  metric = "ROC")
 
 # Model 
