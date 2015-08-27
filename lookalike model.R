@@ -58,6 +58,14 @@ gbmFit2 <- train(x = training_x,
                  tuneLength = 8,
                  metric = "ROC")
 
+# Model 
+fitControl <- trainControl(method = "none", number = 10, repeats = 5, classProbs = T, verbose = T)
+gbmGrid <-  expand.grid(nrounds=500,max_depth=6,eta=0.05)
+fit <- train(target ~ ., data = training, method ="xgbTree", metric ='Kappa', 
+             trControl = fitControl, do.trace=100, tuneGrid = gbmGrid)
+#preProc = c("center","scale"),tuneLength = 10, repeats = 15
+
+
 # Class Distince Calculation
 centroids <- classDist(trainBC, trainMDRR)
 distances <- predict(centroids, testBC)
