@@ -27,6 +27,7 @@ gbmFit1 <- train(target ~ ., data = training,
                  ## for gbm() that passes through
                  verbose = T)
 gbmFit1
+save(gbmFit1,gbmImp, file='model1.RData')
 
 # Plot
 trellis.par.set(caretTheme())
