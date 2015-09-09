@@ -1,8 +1,8 @@
-setwd('C:\\Users\\iliu2\\Documents\\8.Ad-hoc analytics\\LookAlike');
+setwd('/Users/ivanliu/Google Drive/Clients/Coles/');
 rm(list = ls()); gc()
 library(data.table)
 
-dt_full <- fread('data/FCO_LOOKALIKE_COMPLETE.csv', data.table=F)
+dt_full <- fread('data/FCO_LOOKALIKE_TRAIN.csv', data.table=F)
 dim(dt_full)
 str(dt_full); names(dt_full)
 head(dt_full)
@@ -72,7 +72,7 @@ summary(fco_dt$NO_TRANS); summary(ll_dt$NO_TRANS)
 ### Modeling ###
 ################
 library(rpart)
-fit <- rpart(FCO_CST ~ ., data=dt_full[,c(2:37,41)], method='class')#,control=rpart.control(minsplit=2, minbucket=1, cp=0.001)) 
+fit <- rpart(FCO_CST ~ ., data=dt_full[,c(2:38)], method='class',control=rpart.control(minsplit=2, minbucket=1, cp=0.001)) 
 printcp(fit)	
 plotcp(fit)
 rsq.rpart(fit)
