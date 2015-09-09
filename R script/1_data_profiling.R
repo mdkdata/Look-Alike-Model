@@ -72,27 +72,28 @@ summary(fco_dt$NO_TRANS); summary(ll_dt$NO_TRANS)
 ### Modeling ###
 ################
 library(rpart)
-fit <- rpart(FCO_CST ~ ., data=dt_full[,c(2:38)], method='class',control=rpart.control(minsplit=2, minbucket=1, cp=0.001)) 
-printcp(fit)	
-plotcp(fit)
-rsq.rpart(fit)
-print(fit)
-summary(fit)
+fit_rpart <- rpart(FCO_CST ~ ., data=dt_full[,c(2:38)], method='class',control=rpart.control(minsplit=2, minbucket=1, cp=0.0001)) 
+printcp(fit_rpart)	
+plotcp(fit_rpart)
+rsq.rpart(fit_rpart)
+print(fit_rpart)
+summary(fit_rpart)
 
 # plot tree 
-plot(fit, uniform=TRUE, 
+plot(fit_rpart, uniform=TRUE, 
      main="Classification Tree for Kyphosis")
-text(fit, use.n=TRUE, all=TRUE, cex=.8)
+text(fit_rpart, use.n=TRUE, all=TRUE, cex=.8)
 
 # create attractive postscript plot of tree 
-post(fit, file = "c:/tree.ps", 
+post(fit_rpart, file = "c:/tree.ps", 
      title = "Classification Tree for Kyphosis")
 
 ### Random Forest prediction of Kyphosis data
 library(randomForest)
-fit <- randomForest(FCO_CST ~ ., data=dt_full[,c(2:37,41)])
-print(fit) # view results 
-importance(fit) # importance of each predictor
+fit_rf <- randomForest(FCO_CST ~ ., data=dt_full[,c(2:38)])
+print(fit_rf) # view results 
+importance(fit_rf) # importance of each predictor
+pred <- predict(fit_rf, newdate = dt_full)
 
 library(caret)
 # Config
@@ -105,7 +106,7 @@ fitControl <- trainControl(## 10-fold CV
 Grid <-  expand.grid(n.trees=150,interaction.depth=3,shrinkage=0.1,n.minobsinnode = 10)
 # Training
 set.seed(825)
-gbmFit1 <- train(FCO_CST ~ ., data=dt_full[,c(2:37,41)],
+fit_gbm <- train(FCO_CST ~ ., data=dt_full[,c(2:38)],
                  method = "gbm",
                  trControl = fitControl,
                  tuneGrid = Grid,
@@ -113,4 +114,4 @@ gbmFit1 <- train(FCO_CST ~ ., data=dt_full[,c(2:37,41)],
                  ## This last option is actually one
                  ## for gbm() that passes through
                  verbose = T)
-gbmFit1
+fit_gbm
