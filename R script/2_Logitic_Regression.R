@@ -1,0 +1,52 @@
+setwd('/Users/ivanliu/Google Drive/Clients/Coles/');
+setwd('C:\\Users\\iliu2\\Documents\\8.Ad-hoc analytics\\LookAlike');
+rm(list = ls()); gc()
+library(data.table)
+
+train <- fread('data/FCO_LOOKALIKE_TRAIN.csv', data.table=F)
+
+str(train); names(train)
+
+for(i in 1:ncol(train)){
+  if(i %in% c(2,3,5:17,38)) train[,i] <- as.factor(train[,i])
+}
+
+# ?glm
+# train_df <- cbind(as.data.frame(model.matrix(FCO_CST ~ -1 + ., data=train[,c(2:38)])),train$FCO_CST)
+# levels(train$FCO_CST) <- c(0,1)
+# fit <- glm(FCO_CST~., data=train[,2:38])
+
+library(caret)
+# Config
+fitControl <- trainControl(method = "cv",
+                           number = 10,
+                           classProbs = TRUE,
+                           summaryFunction = twoClassSummary)
+Grid <-  expand.grid(n.trees = 150, interaction.depth = 6, shrinkage = 0.01)
+# Training
+set.seed(825)
+fit <- train(FCO_CST ~ ., data=train[,-1],
+                   method = "gbm",
+                   trControl = fitControl,
+                   tuneGrid = Grid,
+                   preProcess = c('center', 'scale'),
+                   metric ='ROC',
+                   verbose = T)
+
+# Plot
+trellis.par.set(caretTheme())
+plot(fit)
+
+# Variable Imp
+fitImp <- varImp(fit, scale = T)
+fitImp
+
+# predict
+test <- fread('data/FCO_LOOKALIKE_COMPLETE.csv', data.table=F)
+test <- test[which(test$AGE_BAND != 'Under 18'),-c(38:40)]
+for(i in 1:ncol(test)){
+  if(i %in% c(2,3,5:17)) test[,i] <- as.factor(test[,i])
+}
+p <- predict(fit, newdata = test[,-c(1,38)],type = "prob")
+head(p)
+length(p[which(p$Y>=.25),2])
