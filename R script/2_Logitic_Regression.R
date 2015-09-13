@@ -64,6 +64,7 @@ for(i in 1:ncol(test)){
   if(i %in% c(2,3,5:17)) test[,i] <- as.factor(test[,i])
 }
 p <- predict(fit, newdata = test[,-c(1,38)],type = "prob")
+p2 <- predict(fit2, newdata = test[,-c(1,38)],type = "prob")
 pred <- cbind(test[,1], p)
 names(pred) <- c('Mbr_Num', 'N', 'Y')
 
