@@ -42,7 +42,7 @@ fitControl2 <- trainControl(method = "none",
 set.seed(825)
 fit2 <- train(FCO_CST ~ ., data=train[,-1],
              method = "rf",
-             trControl = fitControl,
+             trControl = fitControl2,
              tuneGrid = Grid,
              preProcess = c('center', 'scale'),
              metric ='ROC',
