@@ -73,3 +73,5 @@ length(p[which(p$Y>=.5),2])
 
 fit_rf <- fit
 save(fit_rf, pred, file='20150913_lookalike_results_rf.RData')
+
+plot(table(pred$Y))

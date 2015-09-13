@@ -25,17 +25,19 @@ embedding <- as.data.frame(tsne$Y)
 embedding$Class <- as.factor(sub("Class_", "", all_dum[,151]))
 
 p <- ggplot(embedding, aes(x=V1, y=V2, color=Class)) +
-    geom_point(size=1.25) +
-    guides(colour = guide_legend(override.aes = list(size=6))) +
-    xlab("") + ylab("") +
-    ggtitle("t-SNE 2D Embedding of Products Data") +
-    theme_light(base_size=20) +
-    theme(strip.background = element_blank(),
-          strip.text.x     = element_blank(),
-          axis.text.x      = element_blank(),
-          axis.text.y      = element_blank(),
-          axis.ticks       = element_blank(),
-          axis.line        = element_blank(),
-          panel.border     = element_blank())
+  geom_point(size=1.25) +
+  guides(colour = guide_legend(override.aes = list(size=6))) +
+  xlab("") + ylab("") +
+  ggtitle("t-SNE 2D Embedding of Products Data") +
+  theme_light(base_size=20) +
+  theme(strip.background = element_blank(),
+        strip.text.x     = element_blank(),
+        axis.text.x      = element_blank(),
+        axis.text.y      = element_blank(),
+        axis.ticks       = element_blank(),
+        axis.line        = element_blank(),
+        panel.border     = element_blank())
+
+p
 
 ggsave("tsne.png", p, width=8, height=6, units="in")

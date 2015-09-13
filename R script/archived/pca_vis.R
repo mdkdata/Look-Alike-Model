@@ -1,8 +1,11 @@
-setwd('/Users/ivanliu/Google Drive/Clients/Coles/FCO Model')
-fco_dt <- read.csv('../FCO Model/FCO.csv')
-llo_dt <- read.csv('../FCO Model/LLO.csv')
-head(fco_dt);
+# setwd('/Users/ivanliu/Google Drive/Clients/Coles/FCO Model')
+setwd('C:\\Users\\iliu2\\Documents\\8.Ad-hoc analytics\\LookAlike')
+fco_dt <- read.csv('data/FCO.csv')
+llo_dt <- read.csv('data/eshop.csv')
+# head(fco_dt);
 dim(fco_dt);dim(llo_dt)
+fco <- read.csv('data/FCO.csv')
+llo <- read.csv('data/eshop.csv')
 
 #########################
 ### Feature Selection ###
@@ -14,20 +17,20 @@ dim(fco_dt);dim(llo_dt)
 #     )]
 # table(fco_dt[,187])
 cols <-
-    colnames(fco_dt)[c(
-        1,2,5,6,8,21:28,124:139,140:141,152,154:155,160:163,172:173,176,187:189, 196:204,206:207 #177:186, 190:195
-    )]
+  colnames(fco_dt)[c(
+    1,2,5,6,8,21:28,124:139,140:141,152,154:155,160:163,172:173,176,187:189, 196:204,206:207 #177:186, 190:195
+  )]
 
 fco <- fco_dt[,cols]
 llo <- llo_dt[,cols]
 #str(fco[,99:147])
 fco[,c('LOYALTY_RANK_NUMBER')] <-
-    as.factor(fco[,c('LOYALTY_RANK_NUMBER')])
+  as.factor(fco[,c('LOYALTY_RANK_NUMBER')])
 # fco[,c('MBR_RES_PCODE')] <- as.factor(fco[,c('MBR_RES_PCODE')])
 fco$target <- 1
 
 llo[,c('LOYALTY_RANK_NUMBER')] <-
-    as.factor(llo[,c('LOYALTY_RANK_NUMBER')])
+  as.factor(llo[,c('LOYALTY_RANK_NUMBER')])
 # llo[,c('MBR_RES_PCODE')] <- as.factor(llo[,c('MBR_RES_PCODE')])
 llo$target <- 0
 
@@ -35,13 +38,14 @@ llo$target <- 0
 ### Dummy Variable ###
 ######################
 library(caret)
-all_df <- rbind(fco,llo)
+all_df <- rbind(fco[,-1],llo[,-1])
 dim(all_df)
+# all_df[which(is.na(all_df))] <- 0
 dummies <- dummyVars(target ~ ., data = all_df)
 all_dum <- predict(dummies, newdata = all_df)
 
-head(all_dum[,c(3,4,7,16,17)])
-all_dum <- all_dum[,-c(3,4,7,16,17)]
+# head(all_dum[,c(3,4,7,16,17)])
+# all_dum <- all_dum[,-c(3,4,7,16,17)]
 # for (i in 1:ncol(fco)) {
 #     if (is.factor(fco[,i])) {
 #         print(i)
@@ -63,10 +67,10 @@ all_dum_nzv <- all_dum[, -nzv]
 ### PCA ###
 ###########
 pc <-
-    princomp(
-        all_dum[,2:(ncol(all_dum) - 1)], cor = TRUE, scores = TRUE, center = TRUE,
-        scale. = TRUE
-    )
+  princomp(
+    all_dum, cor = F, scores = TRUE, center = TRUE, #all_dum[,2:(ncol(all_dum) - 1)]
+    scale. = TRUE
+  )
 summary(pc)
 plot(pc,type = "lines")
 # biplot(pc)

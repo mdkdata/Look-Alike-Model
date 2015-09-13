@@ -1,4 +1,3 @@
-setwd('/Users/ivanliu/Google Drive/Clients/Coles/');
 setwd('C:\\Users\\iliu2\\Documents\\8.Ad-hoc analytics\\LookAlike');
 rm(list = ls()); gc()
 library(data.table)
