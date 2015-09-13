@@ -65,14 +65,14 @@ for(i in 1:ncol(test)){
 }
 p <- predict(fit, newdata = test[,-c(1,38)],type = "prob")
 p2 <- predict(fit2, newdata = test[,-c(1,38)],type = "prob")
-pred <- cbind(test[,1], p)
-names(pred) <- c('Mbr_Num', 'N', 'Y')
+pred2 <- cbind(test[,1], p2)
+names(pred2) <- c('Mbr_Num', 'N', 'Y')
 
 # Output
 head(p)
-length(p[which(p$Y>=.5),2])
+length(p2[which(p2$Y>=.15),2])
 
-fit_rf <- fit
-save(fit_rf, pred, file='20150913_lookalike_results_rf.RData')
+fit_rf2 <- fit2
+save(fit_rf2, pred2, file='20150913_lookalike_results_rf2.RData')
 
 plot(table(pred$Y))
