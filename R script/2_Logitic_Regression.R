@@ -3,7 +3,7 @@ setwd('C:\\Users\\iliu2\\Documents\\8.Ad-hoc analytics\\LookAlike');
 rm(list = ls()); gc()
 library(data.table)
 
-train <- fread('data/FCO_LOOKALIKE_TRAIN.csv', data.table=F)
+train <- fread('data/LookAlike/FCO_LOOKALIKE_TRAIN.csv', data.table=F)
 
 str(train); names(train)
 
@@ -31,7 +31,7 @@ fit <- train(FCO_CST ~ ., data=train[,-1],
                    method = "rf",
                    trControl = fitControl,
                    tuneGrid = Grid,
-                   preProcess = c('center', 'scale'),
+                   # preProcess = c('center', 'scale'),
                    metric ='ROC',
                    verbose = T)
 
